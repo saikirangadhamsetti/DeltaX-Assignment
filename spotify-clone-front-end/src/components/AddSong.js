@@ -62,6 +62,7 @@ export default function AddSong() {
         artist: data._id,
         id: data._id,
         publishYear: e.target[1].value,
+        coverImage: e.target[2].value,
       }),
     })
       .then((response) => response.json())
@@ -90,7 +91,10 @@ export default function AddSong() {
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ name: e.target[0].value, Dob: e.target[1].value }),
+      body: JSON.stringify({
+        name: e.target[0].value,
+        Dob: e.target[1].value,
+      }),
     })
       .then((response) => response.json())
       .then((data) => {
@@ -133,7 +137,7 @@ export default function AddSong() {
           inputType={"date"}
           id={"DateReleases"}
         />
-        <Component first={"Art Work"} inputType={"file"} id={"ArtWork"} />
+        <Component first={"Art Work"} inputType={"text"} id={"ArtWork"} />
         <div class="addSongInput">
           <div style={{ width: "100px" }}>Artist</div>
           <div style={{ marginLeft: "50px" }}>
@@ -190,7 +194,9 @@ export default function AddSong() {
               <Link to="Top10">
                 <button>Cancel</button>
               </Link>
-              <button type="submit">Save</button>
+              <Link to="Top10">
+                <button type="submit">Save</button>
+              </Link>
             </div>
           </form>
         </Modal>

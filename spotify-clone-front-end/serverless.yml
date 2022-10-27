@@ -1,0 +1,307 @@
+service: program-service
+
+frameworkVersion: "3"
+
+useDotenv: true
+
+package:
+  individually: true
+
+provider:
+  name: aws
+  runtime: nodejs14.x
+  region: ap-south-1
+  memorySize: 128
+  apiGateway:
+    restApiId: ${file(sls-config/env/${opt:stage, 'stg'}.json):REST_API_ID}
+    restApiRootResourceId: ${file(sls-config/env/${opt:stage, 'stg'}.json):REST_API_ROOT_RESOURCE_ID}
+
+  environment:
+    stage: ${sls:stage}
+    region: ${aws:region}
+    programTableName: ${self:custom.programTableName}
+    programBucketName: ${self:custom.programBucketName}
+    userProfileTableName: ${self:custom.userProfileTableName}
+    adminUserPool: ${file(sls-config/env/${opt:stage, 'stg'}.json):ADMIN_USER_POOL}
+    agoraAppId: ${file(sls-config/env/${opt:stage, 'stg'}.json):AGORA_APP_ID}
+    agoraAppCertificate: ${file(sls-config/env/${opt:stage, 'stg'}.json):AGORA_APP_CERTIFICATE}
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:DescribeTable
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:BatchGetItem
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+        - dynamodb:AttributesToGet
+      Resource:
+        - "Fn::GetAtt": [ProgramTable, Arn]
+        - arn:aws:dynamodb:ap-south-1:960004144626:table/stg-user-profile
+    - Effect: Allow
+      Action:
+        - s3:ListObjects
+        - s3:GetObject
+        - s3:PutObject
+      Resource:
+        - arn:aws:s3:::${self:custom.programBucketName}
+        - arn:aws:s3:::${self:custom.programBucketName}/*
+    - Effect: Allow
+      Action:
+        - secretsmanager:GetResourcePolicy
+        - secretsmanager:GetSecretValue
+        - secretsmanager:DescribeSecret
+        - secretsmanager:ListSecretVersionIds
+      Resource:
+        - arn:aws:secretsmanager:ap-south-1:960004144626:secret:*
+
+resources:
+  - ${file(sls-config/resources/program-table.yml)}
+  - ${file(sls-config/resources/program-s3-bucket.yml)}
+
+plugins:
+  - serverless-bundle
+  - serverless-dynamodb-local
+  - serverless-iam-roles-per-function
+  - serverless-offline
+
+functions:
+  programList:
+    handler: src/services/program/list.main
+    events:
+      - http:
+          path: program
+          method: get
+          cors: true
+
+  notificationJob:
+    handler: src/scripts/notification-job/index.main
+    timeout: 10
+    iamRoleStatementsName: sample-send_email_template_lambda_role
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - ses:SendTemplatedEmail
+        Resource: "*"
+    events:
+      - schedule: cron(0/15 * ? * * *)
+
+  registrations:
+    handler: src/services/program/registrations.main
+    timeout: 10
+    events:
+      - http:
+          path: program/registrations/{id}
+          method: get
+          cors: true
+          authorizer: aws_iam
+
+  programAdminList:
+    handler: src/services/program/list-admin.main
+    events:
+      - http:
+          path: program-admin
+          method: get
+          cors: true
+          authorizer: aws_iam
+
+  programGet:
+    handler: src/services/program/get.main
+    events:
+      - http:
+          path: program/{id}
+          method: get
+          cors: true
+
+  programAdminGet:
+    handler: src/services/program/get-admin.main
+    events:
+      - http:
+          path: program-admin/{id}
+          method: get
+          cors: true
+          authorizer: aws_iam
+
+  programCreate:
+    handler: src/services/program/create.main
+    events:
+      - http:
+          path: program
+          method: post
+          cors: true
+          authorizer: aws_iam
+
+  programUpdate:
+    handler: src/services/program/update.main
+    events:
+      - http:
+          path: program
+          method: put
+          cors: true
+          authorizer: aws_iam
+
+  programResourceUpdate:
+    handler: src/services/program/update-resource.main
+    events:
+      - http:
+          path: program/resource
+          method: put
+          cors: true
+          authorizer: aws_iam
+
+  programPublish:
+    handler: src/services/program/publish.main
+    events:
+      - http:
+          path: program/publish
+          method: put
+          cors: true
+          authorizer: aws_iam
+
+  programDelete:
+    handler: src/services/program/delete.main
+    events:
+      - http:
+          path: program/{id}
+          method: delete
+          cors: true
+          authorizer: aws_iam
+
+  programDeleteCover:
+    handler: src/services/program/delete-cover.main
+    events:
+      - http:
+          path: program/{id}/cover/{type}
+          method: delete
+          cors: true
+          authorizer: aws_iam
+
+  getProgramFileUploadUrl:
+    handler: src/services/program/upload-url.main
+    events:
+      - http:
+          path: program/upload-url
+          method: post
+          cors: true
+          authorizer: aws_iam
+
+  listProgRegOption:
+    handler: src/services/program/registration-option-list.main
+    events:
+      - http:
+          path: program/{id}/registration-option
+          method: get
+          cors: true
+          authorizer: aws_iam
+
+  createProgRegOption:
+    handler: src/services/program/registration-option-create.main
+    events:
+      - http:
+          path: program/registration-option
+          method: post
+          cors: true
+          authorizer: aws_iam
+
+  updateProgRegOption:
+    handler: src/services/program/registration-option-update.main
+    events:
+      - http:
+          path: program/registration-option
+          method: put
+          cors: true
+          authorizer: aws_iam
+
+  deleteProgRegOption:
+    handler: src/services/program/registration-option-delete.main
+    events:
+      - http:
+          path: program/{id}/registration-option/{optionId}
+          method: delete
+          cors: true
+          authorizer: aws_iam
+
+  shopifyWebhookHandler:
+    handler: src/services/program/webhook-handler.main
+    events:
+      - http:
+          path: program/webhook-handler/{type}
+          method: post
+          cors: true
+
+  listUserRegs:
+    handler: src/services/program/list-user-registrations.main
+    timeout: 20
+    events:
+      - http:
+          path: program/registrations
+          method: get
+          cors: true
+          authorizer: aws_iam
+
+  listUsersResources:
+    handler: src/services/program/list-users-resources.main
+    timeout: 20
+    events:
+      - http:
+          path: program/listUsersResources
+          method: get
+          cors: true
+          authorizer: aws_iam
+
+  sessionJoin:
+    handler: src/services/program/join.main
+    events:
+      - http:
+          path: program/join
+          method: post
+          cors: true
+          authorizer: aws_iam
+
+  sessionResourceShare:
+    handler: src/services/program/create-resource-token.main
+    events:
+      - http:
+          path: program/create-resource-token
+          method: post
+          cors: true
+          authorizer: aws_iam
+
+  listProgRegOptionRegs:
+    handler: src/services/program/list-registration-option-registrations.main
+    events:
+      - http:
+          path: program/registration-option/{optionId}/registrations
+          method: get
+          cors: true
+          authorizer: aws_iam
+
+  processProgramUploads:
+    handler: src/services/program/process-uploads.main
+    events:
+      - s3:
+          bucket: ${self:custom.programBucketName}
+          existing: true
+          event: s3:ObjectCreated:*
+
+custom:
+  platform: thrive-cafe
+  programTableName: ${sls:stage}-program
+  programBucketName: ${self:custom.platform}-${sls:stage}-program-bucket
+  userProfileTableName: ${sls:stage}-user-profile
+  serverless-iam-roles-per-function:
+    defaultInherit: true
+  sentry:
+    dsn: ${env:SENTRY_DSN}
+  dynamodb:
+    stages:
+      - dev
+    start:
+      port: 8000
+      inMemory: true
+      migrate: true
+  serverless-offline:
+    httpPort: 4000

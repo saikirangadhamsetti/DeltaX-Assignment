@@ -18,9 +18,8 @@ const songSchema = new Schema(
       ref: "Artist",
       required: true,
     },
-    coverImage: {
-      type: String,
-    },
+    artistName: String,
+    coverImage: String,
   },
   { timestamps: true }
 );

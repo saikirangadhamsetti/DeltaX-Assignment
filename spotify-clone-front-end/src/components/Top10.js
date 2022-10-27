@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { UserContext } from "../App";
 import Rating from "./rating/Rating";
 import "./style.css";
+import Top10Artist from "./Top10Artist";
 export default function Top10() {
   const [top10, setTop10] = useState([]);
   const { user, setUser } = useContext(UserContext);
@@ -43,16 +44,20 @@ export default function Top10() {
             <th>Rate</th>
           </tr>
           {top10[0].map((ele) => {
+            console.log(ele.coverImage);
             const user_rating = ele.ratings.find(
-              (ele) => ele.name === user
+              (ele) => ele.user_id === user
             ) || { rating: 0 };
 
             return (
               <tr>
-                <td></td>
+                <td>
+                  <img src={ele.coverImage} alt="no image"></img>
+                </td>
                 <td>{ele.name}</td>
                 <td>{ele.publishYear}</td>
-                <td>{ele.artist}</td>
+                <td>{ele.artistName}</td>
+
                 <td>
                   <Rating
                     ratings={user_rating.rating}
@@ -73,6 +78,7 @@ export default function Top10() {
       >
         logout
       </button>
+      <Top10Artist />
     </div>
   );
 }

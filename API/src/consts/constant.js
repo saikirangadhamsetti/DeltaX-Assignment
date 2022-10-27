@@ -9,4 +9,19 @@ const reducer1 = (arr) => {
   return data / arr.length;
 };
 
-module.exports = { reducer1 };
+const song_rating = (arr) => {
+  const data = arr.reduce((prev, ele) => {
+    if (ele.overallRating) {
+      return prev + parseInt(ele.overallRating);
+    } else {
+      return prev + 0;
+    }
+  }, 0);
+  if (arr.length == 0) {
+    return 0;
+  }
+  console.log(data);
+  return data / arr.length;
+};
+
+module.exports = { reducer1, song_rating };
