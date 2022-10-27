@@ -1,0 +1,119 @@
+.top10 {
+  /* display: block; */
+  font-size: 2em;
+  margin-top: 50px;
+  margin-bottom: 1em;
+  margin-left: 0;
+  margin-right: 0;
+  font-weight: bold;
+  /* background-color: aqua; */
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  margin-right: 10px;
+  /* background-color: azure; */
+}
+.addSong {
+  margin-top: 50px;
+  margin-bottom: 50px;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td {
+  padding: 8px;
+  text-align: center;
+  border-left: 1px solid #ddd;
+}
+.addSongInput {
+  display: flex;
+  margin: 10px;
+  /* justify-content: space-between; */
+}
+.insideInput {
+  margin-left: 50px;
+  width: 500px;
+  /* padding-top: 10px; */
+}
+
+/* loginform */
+
+.primary {
+  /* background-color: lightblue; */
+  height: 100vh;
+  color: black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.button {
+  background-color: black;
+  color: white;
+  width: 295px;
+  height: 55px;
+  margin-top: 0px;
+}
+.text {
+  width: 145px;
+  height: 79px;
+  padding-top: 30px;
+  padding-left: 25px;
+  padding-bottom: 40px;
+}
+.join {
+  position: center;
+
+  padding-bottom: 150px;
+  padding-left: 65px;
+  font-weight: bold;
+}
+.textfield {
+  border-width: 0 0 2px;
+  background-color: transparent;
+  outline: 0;
+  padding-top: 50px;
+  padding-left: 24px;
+  padding-right: 105px;
+}
+.image {
+  padding-top: 222px;
+  padding-bottom: 428px;
+  padding-left: 53px;
+  padding-right: 298px;
+}
+.image1 {
+  margin-top: 120px;
+  margin-bottom: 428px;
+  margin-left: 40px;
+  margin-right: 298px;
+}
+.icon {
+  padding-bottom: 35px;
+  padding-left: 2px;
+  background: url("C:\Users\Tilicho 13\Documents\react\loginpage\src\components\group.svg")
+    no-repeat left;
+  background-size: 25px;
+}
+.icon1 {
+  padding-bottom: 20px;
+
+  padding-left: 2px;
+  background: url("C:\Users\Tilicho 13\Documents\react\loginpage\src\components\pass_2.svg")
+    no-repeat left;
+  background-size: 25px;
+}
+.bottom {
+  padding-left: 25px;
+}
+.href {
+  color: black;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* loginform */
