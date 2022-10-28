@@ -11,11 +11,7 @@ export default function App() {
     const loggedInUser = localStorage.getItem("user");
     // console.log(loggedInUser);
     setUser(loggedInUser);
-    // if (loggedInUser) {
-    //   const foundUser = JSON.parse(loggedInUser);
-    //   console.log(foundUser);
-    //   setUser(foundUser);
-    // }
+
   }, []);
   console.log(user, "jj");
   return (

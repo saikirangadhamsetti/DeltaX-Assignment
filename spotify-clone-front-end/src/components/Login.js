@@ -9,7 +9,6 @@ export default function Login() {
   const { user, setUser } = useContext(UserContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  //   const [user, setUser] = useState();
   let navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,7 +18,7 @@ export default function Login() {
     console.log(e.target[0], e.target[1]);
 
     fetch("api/login", {
-      method: "POST", // or 'PUT'
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
@@ -57,18 +56,15 @@ export default function Login() {
   return (
     <div className="primary">
       <form onSubmit={handleSubmit}>
-        {/* <img  src={pic}/> */}
         <div className="icon">
           <input
             className="textfield"
             placeholder="email"
             type="text"
             name="name"
-            // onChange={emailValidatioin}
           />
         </div>
         <p>{error}</p>
-        {/* <img  src={passwordpic}/> */}
         <div className="icon1">
           <input
             className="textfield"
@@ -78,13 +74,8 @@ export default function Login() {
           />
         </div>
         <br></br>
-        <button className="button">SIGNUP</button>
-        <p className="bottom">
-          Already on Flyero? Tap to{" "}
-          <a className="href" href="">
-            LOGIN
-          </a>
-        </p>
+        <button type="submit" className="button">LOGIN</button>
+      
       </form>
     </div>
   );

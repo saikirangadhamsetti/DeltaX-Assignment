@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Modal from "react-modal";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const customStyles = {
   content: {
     top: "50%",
@@ -28,6 +28,7 @@ export default function AddSong() {
   const [modalIsOpen, setIsOpen] = React.useState(false);
   const [state, setState] = useState({});
   const [artist, setArtist] = useState([]);
+  const navigate = useNavigate();
 
   function openModal() {
     setIsOpen(true);
@@ -50,10 +51,10 @@ export default function AddSong() {
         });
       }
 
-      // console.log(e.target[i].value);
+
     }
     fetch("/api/addSong", {
-      method: "POST", // or 'PUT'
+      method: "POST", 
       headers: {
         "Content-Type": "application/json",
       },
@@ -68,6 +69,7 @@ export default function AddSong() {
       .then((response) => response.json())
       .then((data) => {
         console.log("Success:", data);
+        navigate("/");
       })
       .catch((error) => {
         console.error("Error:", error);
@@ -87,7 +89,7 @@ export default function AddSong() {
     }
 
     fetch("/api/addArtist", {
-      method: "POST", // or 'PUT'
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
@@ -119,9 +121,6 @@ export default function AddSong() {
           return [data.data];
         });
 
-        // setTop10((prev) => {
-        //   return [...prev, data.data];
-        // });
       });
   }, [state]);
   if (artist.length == 0) {
@@ -156,17 +155,13 @@ export default function AddSong() {
                 ></option>
               );
             })}
-            {/* <option value="Edge" />
-            <option value="Firefox" />
-            <option value="Chrome" />
-            <option value="Opera" />
-            <option value="Safari0" /> */}
+    
           </datalist>
           <button type="button" onClick={openModal}>
             + Add Artist
           </button>
         </div>
-
+      
         <div style={{ display: "flex", justifyContent: "center" }}>
           <button type="button">Cancel</button>
           <button type="submit">Save</button>
@@ -180,7 +175,6 @@ export default function AddSong() {
           style={customStyles}
           contentLabel="Example Modal"
         >
-          <button onClick={closeModal}>close</button>
           <form onSubmit={postArtist}>
             <Component
               first={"Artist Name"}
@@ -189,15 +183,23 @@ export default function AddSong() {
             />
             <Component first={"Date of Birth"} inputType={"date"} id={"DOB"} />
             <Component first={"Bio"} inputType={"textfield"} id={"Bio"} />
+            <div style={{ display: "flex", justifyContent: "flex-start" }}>
+              
+              <button type="button" onClick={closeModal}>Cancel</button>
+        
+            
+              
+            
+          </div>
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+          <button type="submit">Save</button>
+          <button onClick={closeModal}>Close</button>
+        
+            
+          </div>
+           
 
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <Link to="Top10">
-                <button>Cancel</button>
-              </Link>
-              <Link to="Top10">
-                <button type="submit">Save</button>
-              </Link>
-            </div>
+          
           </form>
         </Modal>
       </div>

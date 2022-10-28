@@ -27,8 +27,22 @@ export default function Top10() {
   }
   return (
     <div class="container">
+      <div  style={{display:"flex",justifyContent:'flex-end'}}>
+      <button 
+        type="button"
+        onClick={() => {
+          setUser(null);
+        }}
+       style={{width:"100px",marginTop:'10px',marginRight:'10px'}}
+      >
+        logout
+      </button>
+      </div>
+
       <div class="header">
+        
         <div class="top10">Top 10 Songs</div>
+        
         <Link to="addSong">
           <button class="addSong">+ Add Song</button>
         </Link>
@@ -52,7 +66,7 @@ export default function Top10() {
             return (
               <tr>
                 <td>
-                  <img src={ele.coverImage} alt="no image"></img>
+                  <img style={{width:"100px",height:"100px"}} src={ele.coverImage} alt="no image"></img>
                 </td>
                 <td>{ele.name}</td>
                 <td>{ele.publishYear}</td>
@@ -70,15 +84,7 @@ export default function Top10() {
           })}
         </table>
       </div>
-      <button
-        type="button"
-        onClick={() => {
-          setUser(null);
-        }}
-      >
-        logout
-      </button>
-      <Top10Artist />
+            <Top10Artist />
     </div>
   );
 }

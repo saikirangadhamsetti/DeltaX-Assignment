@@ -1,9 +1,9 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const routes = require("./routes/route");
-const username = encodeURIComponent("joy_sharon");
-const password = encodeURIComponent("Joy@123456");
-let uri = `mongodb+srv://${username}:${password}@atlascluster.l2inhnf.mongodb.net/test`;
+const username = encodeURIComponent("saikiran");
+const password = encodeURIComponent("saikiran");
+let uri = `mongodb+srv://${username}:${password}@cluster0.hyzmo10.mongodb.net/test`;
 const app = express();
 var cors = require("cors");
 app.use(cors());
@@ -22,7 +22,8 @@ database.once("connected", () => {
 });
 
 app.listen(3004, () => {
-  console.log(`Server Started at ${3000}`);
+  console.log(`Server Started at ${3004
+  }`);
 });
 
 app.use("/api", routes);
